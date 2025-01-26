@@ -1,0 +1,6 @@
+name: PauseScreenPing
+main: HBIDamian\PauseScreenPing\Main
+author: HBIDamian
+description: A simple plugin that shows the ping of the players in the Pause screen.
+version: 1.0.0
+api: 5.0.0
