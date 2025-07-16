@@ -6,6 +6,7 @@ namespace HBIDamian\PauseScreenPing;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\player\Player;
 use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\TextFormat;
@@ -33,6 +34,11 @@ class Main extends PluginBase implements Listener {
     public function onJoin(PlayerJoinEvent $event): void {
         $player = $event->getPlayer();
         $this->createScoreboard($player);
+    }
+
+    public function onQuit(PlayerQuitEvent $event): void {
+        $disconnectedPlayer = $event->getPlayer();
+        $this->removePlayerFromScoreboards($disconnectedPlayer);
     }
 
     public function updateScoreboards(): void {
@@ -73,5 +79,27 @@ class Main extends PluginBase implements Listener {
             $scorePacket->entries[] = $entry;
         }
         $player->getNetworkSession()->sendDataPacket($scorePacket);
+    }
+
+    private function removePlayerFromScoreboards(Player $disconnectedPlayer): void {
+        foreach ($this->getServer()->getOnlinePlayers() as $onlinePlayer) {
+            // Don't try to update the scoreboard of the player who just disconnected
+            if ($onlinePlayer === $disconnectedPlayer) {
+                continue;
+            }
+            
+            $scorePacket = new SetScorePacket();
+            $scorePacket->type = SetScorePacket::TYPE_REMOVE;
+            $entry = new ScorePacketEntry();
+            $entry->objectiveName = "hbidamian_player_ping";
+            $entry->type = ScorePacketEntry::TYPE_PLAYER;
+            $entry->customName = $disconnectedPlayer->getName();
+            $entry->score = 0; // Score is required even for removal
+            $entry->scoreboardId = $disconnectedPlayer->getId();
+            $entry->actorUniqueId = $disconnectedPlayer->getId();
+            $scorePacket->entries[] = $entry;
+            
+            $onlinePlayer->getNetworkSession()->sendDataPacket($scorePacket);
+        }
     }
 }
