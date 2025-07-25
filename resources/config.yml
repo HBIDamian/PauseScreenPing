@@ -1,13 +1,71 @@
-# PauseScreenPing's Config
+# PauseScreenPing Configuration File
+# This plugin displays player ping information on the pause screen scoreboard
+
+# ====================
+# STATIC DISPLAY SETTINGS
+# ====================
 
 # Display Name or Title on the Pause Menu
-# If you want it to be empty, just do " "
-display-name: "&dPauseScreenPing"
+# If you want it to be empty, just use " "
+# This is overwritten by dynamic display names if enabled
+static-display-name: "&dStatic PauseScreenPing"
+
+
+
+# ====================
+# DYNAMIC DISPLAY NAMES
+# ====================
+
+# Enable dynamic display names that cycle through preset names
+dynamic-display-name: false
+
+# Shuffle mode for dynamic display names
+# "on"  = Random selection from the list
+# "off" = Sequential cycling through the list
+dynamic-display-names-shuffle: "on"
+
+# List of display names to cycle through
+# Only used when dynamic-display-name is true
+# Overwrites the static-display-name setting
+# Available variables: {ONLINE_PLAYERS}, {MAX_PLAYERS}, {SERVER_VERSION}, {POCKETMINE_API}
+dynamic-display-names:
+  - "&aMessage 1"
+  - "&bMessage 2"
+  - "&cMessage 3"
+  - "&dMessage 4"
+
+
+
+# ====================
+# PERFORMANCE SETTINGS
+# ====================
 
 # Update the ping of the players every x ticks
-# (20 ticks = 1 second) 
+# (20 ticks = 1 second)
 # Allowed values: Integer (1 or more)
-update-interval: 20
+update-interval: 100
+
+# Interval for changing display names (in ticks)
+# Only used when dynamic-display-name is true
+# (20 ticks = 1 second, 1200 ticks = 1 minute)
+dynamic-name-interval: 400
+
+
+
+# ====================
+# PRIVACY SETTINGS
+# ====================
 
 # Only see own ping (true/false)
+# When enabled, players can only see their own ping instead of all players
 only-see-own-ping: false
+
+
+
+# ====================
+# CONFIG VERSION
+# ====================
+
+# Version of the configuration file
+# Don't change this unless you know what you're doing
+config-version: 1.2.0
